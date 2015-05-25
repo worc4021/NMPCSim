@@ -13,7 +13,7 @@ initMats;
 
 for n = s.N:-1:1
     s.m = n;
-    nlambda = numel(find(actW(n,:)));
+    nlambda = numel(find(actW(:,n)));
     sol = maxWrapper(Pc,qc,Ch,phih,s);
     
     wM(:,:,n) = sol.wM;

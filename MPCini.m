@@ -42,8 +42,9 @@ end
 
 xE = [1;-50];
 
+tic;
 [outSys,XT,UT,WT] = linesearchWrapper([0;0],xE,system);
-
+toc
 figure(1)
 hold on
 for i = 1:N
@@ -56,4 +57,13 @@ end
 for i = 1:(size(XT,1)/2)
     plot(XT(2*i-1,:),XT(2*i,:),'b')
 end
+% 
+% x0 = XT(end-1:end,1);
+% xE = [0;-30];
+% 
+% [outSys1,XT1,UT1,WT1] = linesearchWrapper(x0,-xE,outSys);
+% 
+% for i = 1:(size(XT1,1)/2)
+%     plot(XT1(2*i-1,:),XT1(2*i,:),'k')
+% end
 hold off

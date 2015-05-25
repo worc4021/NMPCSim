@@ -11,7 +11,7 @@ parameters;
 
 if 0
     n = 5;
-    [PT,K,~,gammaSQ,~] = terminalController(A,B,eye(2),Q,R);
+    [PT,K,~,gammaSQ,~] = terminalController(A,B,eye(2),Q,R,1175);
     PSI = A+B*K;
     
     [X1,U] = meshgrid(linspace(-maxX(1),maxX(1),n),linspace(-maxU,maxU,n));
@@ -60,12 +60,14 @@ if ~exist('noRecompute','var')
     lambdaNext = [];
 
     iter = 1;
-    iterMax = 50;
+    iterMax = 2000;
     while and(~altIsContained(Lambda,lambda,LambdaNext,lambdaNext),iter<iterMax)
 
         if iter~=1
             Lambda = LambdaNext;
             lambda = lambdaNext;
+        elseif iter == 23
+            0;
         end
 
         for i = 1:length(idx)

@@ -12,8 +12,8 @@ rhsMult = double(reshape(rhsOld,numel(rhsOld),1));
     lambdaZ,muM,mum,muZ,zetaM,zetam,zetaZ,uK,uk,kappaK,kappak,...
     kappaZ,rhoK,rhok,rhoZ,s);
 
-wCandNum = kron(eye(s.N),s.G)*(wVar*x0 + wCon)  - diag(rhsMult)*kron(eye(s.N),s.H(:,1:2))*(xpVar(1:end-2,:)*x0+xpCon(1:end-2)) - diag(rhsMult)*kron(eye(s.N),s.H(:,3))*(uVar*x0+uCon) - diag(rhsMult)*repmat(s.g,s.N,1);
-wCandDen = (kron(eye(s.N),s.G)*wVar - diag(rhsMult)*kron(eye(s.N),s.H(:,1:2))*xpVar(1:end-2,:) - diag(rhsMult)*kron(eye(s.N),s.H(:,3))*uVar)*(xE-x0);
+wCandNum = diag(rhsMult)*(kron(eye(s.N),s.G)*(wVar*x0 + wCon)  - kron(eye(s.N),s.H(:,1:2))*(xpVar(1:end-2,:)*x0+xpCon(1:end-2)) - kron(eye(s.N),s.H(:,3))*(uVar*x0+uCon) - repmat(s.g,s.N,1));
+wCandDen = diag(rhsMult)*(kron(eye(s.N),s.G)*wVar - kron(eye(s.N),s.H(:,1:2))*xpVar(1:end-2,:) - kron(eye(s.N),s.H(:,3))*uVar)*(xE-x0);
 
 xiCandNum = - genCellConCat(s.stage,'xi') + cellToBlock(s.stage,'Xi','1:2')*(xpVar(1:end-2,:)*x0+xpCon(1:end-2)) + cellToBlock(s.stage,'Xi','3')*(uVar*x0+uCon);
 xiCandDen = (cellToBlock(s.stage,'Xi','1:2')*xpVar(1:end-2,:) + cellToBlock(s.stage,'Xi','3')*uVar)*(xE-x0);
@@ -47,8 +47,8 @@ kappaCandDen = kappaVar*(xE-x0);
 
 wNEQ = and(distDen>tol,rhsWholeOld);
 xiNEQ = xiCandDen>tol;
-lambdaNEQ = and(lambdaCandDen<-tol,lambdaCandNum>tol);
-kappaNEQ = and(kappaCandNum>tol,kappaCandDen<-tol);
+lambdaNEQ = lambdaCandDen<-tol;
+kappaNEQ = kappaCandDen<-tol;
 
 xiCandIDX = false(size(xiCandNum));
 wCandIDX = false(size(wCandNum));

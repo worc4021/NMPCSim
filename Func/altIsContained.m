@@ -4,7 +4,7 @@ function retVal = altIsContained(A1,b1,A2,b2)
 if and(~isempty(A1),~isempty(A2))
     V = vertexEnumeration(A1,b1);
     retVal = 1;
-    for i = 1:size(V,2)
+    for i = 1:size(V,1)
         retVal = and(retVal,CheckLinCons(V(i,:)',A2,b2));
     end
 else

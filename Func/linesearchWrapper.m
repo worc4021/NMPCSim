@@ -1,4 +1,4 @@
-function [outSys,XT,UT,WT] = linesearchWrapper(x0,xE,s)
+function [s,XT,UT,WT] = linesearchWrapper(x0,xE,s)
 
 tol = 1e-9;
 
@@ -13,7 +13,7 @@ WT = [];
 iter = 0;
 stepsize = 0;
 
-fprintf('Iteration : State : Stage constraints : Disturbance constraints : Disturbance right hand side\n');
+fprintf('Iteration : Step size : State : Stage constraints : Disturbance constraints : Disturbance right hand side\n');
 fprintf('%2.0d. : %9.2e : [ %8.4f , %8.4f ]  : ', iter,stepsize,xC(1),xC(2))
     for l = 1:3
         for m = 1:s.N
@@ -35,12 +35,13 @@ fprintf('%2.0d. : %9.2e : [ %8.4f , %8.4f ]  : ', iter,stepsize,xC(1),xC(2))
 
 while d'*xC<d'*d-tol;
 
-    if iter==6
+    if iter==7
         0;
     end
 
 [wM,wm,xpM,xpm,lambdaM,lambdam,lambdaZ,muM,mum,muZ,zetaM,zetam,zetaZ,uK,uk,...
     kappaK,kappak,kappaZ,rhoK,rhok,rhoZ] = solver(s);
+
 
     [x,u,w,lambda,kappa] = trajectoryEvaluator(xC,wM,wm,xpM,xpm,lambdaM,...
         lambdam,lambdaZ,muM,mum,muZ,zetaM,zetam,zetaZ,uK,uk,kappaK,kappak,...
@@ -50,7 +51,7 @@ while d'*xC<d'*d-tol;
     WT = [WT;w];
     
     
-    [outSys,stepsize] = linesearch(xC,xE,wM,wm,xpM,...
+    [lSys,stepsize] = linesearch(xC,xE,wM,wm,xpM,...
     xpm,lambdaM,lambdam,lambdaZ,muM,mum,muZ,zetaM,zetam,zetaZ,uK,uk,...
     kappaK,kappak,kappaZ,rhoK,rhok,rhoZ,s);
 
@@ -68,7 +69,7 @@ while d'*xC<d'*d-tol;
     end
 
     if and(stepsize<1,stepsize>0)
-        s = outSys;
+        s = lSys;
         xC = xC + stepsize*(xE-xC);
             fprintf('%2.0d. : %9.2e : [ %8.4f , %8.4f ]  : ', iter,stepsize,xC(1),xC(2))
             for l = 1:3

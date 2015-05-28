@@ -6,7 +6,9 @@ L = [s.stage{s.m}.Xi(actU,3);
 
 nkappa = numel(find(actU));
  
-LHSconst = [-q(3);s.stage{s.m}.xi(actU);-phi];
+LHSconst = [-q(3);
+            s.stage{s.m}.xi(actU);
+            -phi];
 LHSvar = [-P(3,1:2);
           -s.stage{s.m}.Xi(actU,1:2);
           -C(:,1:2)];

@@ -40,11 +40,10 @@ else
 end
 
 G = [[1;-1],zeros(2,1);
-    zeros(2,1),[1;-1];
-    zeros(length(V2),1),ones(length(V2),1);
-    zeros(length(V2),1),-ones(length(V2),1)];
-g = [ones(4,1)*maxW;zeros(length(G)-4,1)];
-H = [zeros(4,3);V2;-V2];
+    zeros(length(V2)+1,1),ones(length(V2)+1,1);
+    zeros(length(V2)+1,1),-ones(length(V2)+1,1)];
+g = [ones(3,1)*maxW;zeros(length(V2),1);maxW;zeros(length(V2),1)];
+H = [zeros(3,3);V2;zeros(1,3);-V2];
 
 if ~exist('noRecompute','var')
     idx = (1:length(V2))';

@@ -14,6 +14,6 @@ for i = 1:s.N
     w(:,i) = wM(:,:,i)*[x(:,i);u(:,i)]+wm(:,:,i);
     lambda(:,i) = lambdaM(:,:,i)*[x(:,i);u(:,i)]+lambdam(:,:,i);
     x(:,i+1) = xpM(:,:,i)*[x(:,i);u(:,i)]+xpm(:,:,i);
-    wMax = s.G*w(:,i)-diag(double(s.rhsIdx(:,i)))*(s.g+s.H*[x(:,i);u(i)]);
+    wMax = diag(double(s.rhsIdx(:,i)))*(s.G*w(:,i)-s.g+s.H*[x(:,i);u(i)]);
     xiMax = s.stage{i}.Xi*[x(:,i);u(i)]- s.stage{i}.xi;
 end

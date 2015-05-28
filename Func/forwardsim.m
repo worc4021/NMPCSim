@@ -45,50 +45,53 @@ curFst = 0;
 for i = 1:N
     curLst = curFst + length(s.stage{i}.xi);
     T = xpVar((i-1)*2+1:i*2,:);
+    t = xpCon((i-1)*2+1:i*2);
     
     uVar(i,:) = uK(:,:,i)*T;
-    uCon(i) = uK(:,:,i)*xpCon((i-1)*2+1:i*2) + uk(:,:,i);
+    uCon(i) = uK(:,:,i)*t + uk(:,:,i);
     
     kappaVar(curFst+1:curLst,:) = kappaK{i}*T ...
         + kappaZ{i}*zetaVar(i,:);
-    kappaCon(curFst+1:curLst) = kappaK{i}*xpCon((i-1)*2+1:i*2) ...
+    kappaCon(curFst+1:curLst) = kappaK{i}*t ...
         + kappak{i}+ kappaZ{i}*zetaCon(i);
     kappaD(curFst+1:curLst,:) = kappaZ{i}*zetaD(i,:);
     
     % Finish here!
     
     rhoVar(i,:) = rhoK(:,:,i)*T + rhoZ(:,:,i)*zetaVar(i,:);
-    rhoCon(i) = rhoK(:,1:2,i)*xpCon((i-1)*2+1:i*2) ...
+    rhoCon(i) = rhoK(:,1:2,i)*t ...
         + rhok(:,:,i)+ rhoZ(:,:,i)*zetaCon(i);
     rhoD(i,:) = rhoZ(:,:,i)*zetaD(i,:);
     
     Th = [xpVar((i-1)*2+1:i*2,:);
           uVar(i,:)];
+    th = [xpCon((i-1)*2+1:i*2);
+          uCon(i)];
       
     wVar((i-1)*2+1:i*2,:) = wM(:,:,i)*Th;
-    wCon((i-1)*2+1:i*2) = wm(:,:,i)+wM(:,:,i)*[xpCon((i-1)*2+1:i*2);uCon(i)];
+    wCon((i-1)*2+1:i*2) = wm(:,:,i)+wM(:,:,i)*th;
     
     xpVar(i*2+1:(i+1)*2,:) = xpM(:,:,i)*Th;
-    xpCon(i*2+1:(i+1)*2) = xpm(:,:,i)+xpM(:,:,i)*[xpCon((i-1)*2+1:i*2);uCon(i)];
+    xpCon(i*2+1:(i+1)*2) = xpm(:,:,i)+xpM(:,:,i)*th;
     
     lambdaVar((i-1)*length(s.g)+1:i*length(s.g),:) = lambdaM(:,:,i)*Th ...
         + lambdaZ(:,:,i)*rhoVar(i,:);
     lambdaCon((i-1)*length(s.g)+1:i*length(s.g)) = lambdam(:,:,i) ...
-        + lambdaM(:,:,i)*[xpCon((i-1)*2+1:i*2);uCon(i)] ...
+        + lambdaM(:,:,i)*th ...
         + lambdaZ(:,:,i)*rhoCon(i);
     lambdaD((i-1)*length(s.g)+1:i*length(s.g),:) = lambdaZ(:,:,i)*rhoD(i,:);
     
     muVar((i-1)*2+1:i*2,:) = muM(:,:,i)*Th ...
         + muZ(:,:,i)*rhoVar(i,:);
     muCon((i-1)*2+1:i*2) = mum(:,:,i) ...
-        + muM(:,:,i)*[xpCon((i-1)*2+1:i*2);uCon(i)] ...
+        + muM(:,:,i)*th ...
         + muZ(:,:,i)*rhoCon(i);
     muD((i-1)*2+1:i*2,:) = muZ(:,:,i)*rhoD(i,:);
     
     zetaVar(i,:) = zetaM(:,:,i)*Th ...
         + zetaZ(:,:,i)*rhoVar(i,:);
     zetaCon(i) = zetam(:,:,i) ...
-        + zetaM(:,:,i)*[xpCon((i-1)*2+1:i*2);uCon(i)] ...
+        + zetaM(:,:,i)*th ...
         + zetaZ(:,:,i)*rhoCon(i);
     zetaD(i,:) = zetaZ(:,:,i)*rhoD(i,:);
     curFst = curLst;

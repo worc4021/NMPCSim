@@ -22,12 +22,14 @@ else
     
     r = rank(L);
 
-    if r == m
+    if and(r == m, r ~= n)
         hel = [K,L';
                L,zeros(m)];
         RHSconst = hel\LHSconst;
         RHSvar = hel\LHSvar;
         RHSorth = [];
+        
+           
     elseif r == n
         R = R(1:r,:);
         H = R\(Q(:,1:r)');

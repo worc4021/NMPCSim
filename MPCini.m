@@ -24,7 +24,8 @@ system.Q = Q;
 system.R = R;
 system.gammasq = gammaSQ;
 system.rhsIdx = false(length(g),N);
-system.rhsIdx(1:4,:) = true(4,N);
+system.rhsIdx(1:3,:) = true(3,N);
+system.rhsIdx(14,:) = true(1,N); % find(g)
 system.wIdx = false(length(g),N);
 system.P = PT;
 system.N = N;
@@ -42,9 +43,9 @@ end
 
 xE = [1;-50];
 
-tic;
+
 [outSys,XT,UT,WT] = linesearchWrapper([0;0],xE,system);
-toc
+
 figure(1)
 hold on
 for i = 1:N

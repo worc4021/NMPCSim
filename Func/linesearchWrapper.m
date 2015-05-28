@@ -35,7 +35,7 @@ fprintf('%2.0d. : %9.2e : [ %8.4f , %8.4f ]  : ', iter,stepsize,xC(1),xC(2))
 
 while d'*xC<d'*d-tol;
 
-    if iter==7
+    if iter==19
         0;
     end
 

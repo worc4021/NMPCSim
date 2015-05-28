@@ -34,10 +34,8 @@ end
 
 rhsOld(1:2,:) = true(2,s.N);
 
-rhsWholeOld = reshape(rhsOld,numel(rhsOld),1);
-
-distNum = wCandNum - rhsCandNum;
-distDen = wCandDen - rhsCandDen;
+distNum = wCandNum;% - rhsCandNum;
+distDen = wCandDen;% - rhsCandDen;
 
 lambdaCandNum = lambdaVar*x0+lambdaCon;
 lambdaCandDen = lambdaVar*(xE-x0);
@@ -45,9 +43,9 @@ lambdaCandDen = lambdaVar*(xE-x0);
 kappaCandNum = kappaVar*x0+kappaCon;
 kappaCandDen = kappaVar*(xE-x0);
 
-wNEQ = and(distDen>tol,rhsWholeOld);
+wNEQ = distDen>tol;
 xiNEQ = xiCandDen>tol;
-lambdaNEQ = lambdaCandDen<-tol;
+lambdaNEQ = lambdaCandDen>tol;
 kappaNEQ = kappaCandDen<-tol;
 
 xiCandIDX = false(size(xiCandNum));
@@ -59,8 +57,10 @@ lambdaCandIDX = false(size(lambdaCandNum));
 temp2 = find(xiNEQ,temp);
 xiCandIDX(temp2(temp)) = true;
 [wCand,temp] = min(-distNum(wNEQ)./distDen(wNEQ));
-temp2 = find(wNEQ,temp);
-wCandIDX(temp2(temp)) = true;
+if ~isempty(temp)
+    temp2 = find(wNEQ,temp);
+    wCandIDX(temp2(temp)) = true;
+end
 [lambdaCand,temp] = min(-lambdaCandNum(lambdaNEQ)./lambdaCandDen(lambdaNEQ));
 if ~isempty(temp)
     temp2 = find(lambdaNEQ,temp);
@@ -82,7 +82,11 @@ if ~isempty(wCand)
     listed(2) = wCand;
 end
 if ~isempty(lambdaCand)
-    listed(3) = lambdaCand;
+    if lambdaCandNum(and(lambdaNEQ,lambdaCandIDX))>0
+        listed(3) = -lambdaCand;
+    else
+        listed(3) = lambdaCand;
+    end
 end
 if ~isempty(kappaCand)
     listed(4) = kappaCand;

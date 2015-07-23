@@ -4,6 +4,11 @@ if ~exist('noRecompute','var')
     clc
 end
 
+p = path();
+if isempty(strfind(p,'Func'));
+    path(p,'Func');
+end
+
 parameters;
 
 [~,A,B] = a2DfunNew(x0,u0);
@@ -92,8 +97,12 @@ if ~exist('noRecompute','var')
         [LambdaNext,lambdaNext] = inequalityReduction([Lambda;LambdaNext],[lambda;lambdaNext]);
         iter = iter+1;
     end
-%     figure(2)
-%     plot(Polyhedron(LambdaNext,lambdaNext))
+    figure(2)
+    plot(Polyhedron(LambdaNext,lambdaNext))
+    xlabel('$$\tilde x_1$$','fontsize',16,'interpreter','latex')
+    ylabel('$$\tilde x_2$$','fontsize',16,'interpreter','latex')
+    set(gca,'color','none','fontname','serif')
+    set(gcf,'color',[1,1,1])
 
     Lambda = LambdaNext;
     lambda = lambdaNext;

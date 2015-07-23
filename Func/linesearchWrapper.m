@@ -9,6 +9,7 @@ XT = [];
 UT = [];
 WT = [];
 
+t = 0;
 
 iter = 0;
 stepsize = 0;
@@ -35,13 +36,16 @@ fprintf('%2.0d. : %9.2e : [ %8.4f , %8.4f ]  : ', iter,stepsize,xC(1),xC(2))
 
 while d'*xC<d'*d-tol;
 
-    if iter==19
+    if iter==18
         0;
     end
-
+tic;
 [wM,wm,xpM,xpm,lambdaM,lambdam,lambdaZ,muM,mum,muZ,zetaM,zetam,zetaZ,uK,uk,...
     kappaK,kappak,kappaZ,rhoK,rhok,rhoZ] = solver(s);
-
+TMP = toc;
+if TMP>t
+    t = TMP;
+end
 
     [x,u,w,lambda,kappa] = trajectoryEvaluator(xC,wM,wm,xpM,xpm,lambdaM,...
         lambdam,lambdaZ,muM,mum,muZ,zetaM,zetam,zetaZ,uK,uk,kappaK,kappak,...
@@ -70,6 +74,7 @@ while d'*xC<d'*d-tol;
 
     if and(stepsize<1,stepsize>0)
         s = lSys;
+        s.t = t;
         xC = xC + stepsize*(xE-xC);
             fprintf('%2.0d. : %9.2e : [ %8.4f , %8.4f ]  : ', iter,stepsize,xC(1),xC(2))
             for l = 1:3

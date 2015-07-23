@@ -1,6 +1,6 @@
 if ~exist('noRecompute','var')
     if ~exist('N','var')
-        N = 5;
+        N = 50;
     end
     
     LambdaStage = cell(1,N+1);
